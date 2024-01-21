@@ -6,16 +6,26 @@ public class User {
     private String password;
     private String email;
     private String urlAvt;
+    private int total;
 
-    public User(String id, String name, String password, String email, String urlAvt) {
+    public User(String id, String name, String password, String email, String urlAvt,int total) {
         this.id = id;
         this.name = name;
         this.password = password;
         this.email = email;
         this.urlAvt = urlAvt;
+        this.total = total;
     }
     public User(){
 
+    }
+
+    public int getTotal() {
+        return total;
+    }
+
+    public void setTotal(int total) {
+        this.total = total;
     }
 
     public String getId() {
