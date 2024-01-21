@@ -8,11 +8,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Controller
 public class Control {
-    @GetMapping("/a")
-    public String hello(Model model) {
-        model.addAttribute("pageTitle", "Welcome to My Page");
-        model.addAttribute("pageTitle", "Welcome to My Page");
-        model.addAttribute("message", "This is a Thymeleaf example.");
-        return "home"; // Trả về tên của template Thymeleaf (không có đuôi .html)
+
+    @GetMapping("/")
+    public String home() {
+        return "home";
+    }
+    @GetMapping("/login")
+    public String login() {
+        return "login";
     }
 }

@@ -19,7 +19,7 @@
       <!-- Sidebar scroll-->
       <div>
         <div class="brand-logo d-flex align-items-center justify-content-between">
-          <a th:href="@{/home.html}" class="text-nowrap logo-img">
+          <a th:href="@{/all}" class="text-nowrap logo-img">
             <img src="assets/images/logos/dark-logo.svg" width="180" alt="" />
           </a>
 
@@ -40,14 +40,6 @@
                   <i class="ti ti-layout-dashboard"></i>
                 </span>
                 <span class="hide-menu">Quản lý Đơn</span>
-              </a>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="./allUser" aria-expanded="false">
-                <span>
-                  <i class="ti ti-layout-dashboard"></i>
-                </span>
-                <span class="hide-menu">Quản lý Tài khoản</span>
               </a>
             </li>
           </ul>
@@ -107,45 +99,59 @@
       </header>
       <!--  Header End -->
       <div class="container-fluid">
-        <div class="container mt-5">
-          <h2>Danh sách đơn hàng</h2>
-          <a class="btn btn-primary" th:href="@{'/web/orders/all'}">ALl</a>
-          <a class="btn btn-primary" th:href="@{'/web/orders/status'}">Pending</a>
-          <a class="btn btn-primary" th:href="@{'/web/orders/statusC'}">Complete</a>
-          <!-- Danh sách đơn hàng -->
-          <table class="table">
+        <div class="container">
+          <h1 class="text-center">Chi tiết order</h1>
+          <!-- Tạo một bảng để hiển thị các thông tin chung của order -->
+          <table class="table table-bordered table-striped">
             <thead>
             <tr>
-              <th>ID</th>
               <th>Tên</th>
+              <th>Số điện thoại</th>
+              <th>Giá</th>
+              <th>Phí ship</th>
               <th>Trạng thái</th>
-              <th>Tổng Đơn Giá</th>
               <th>Khu vực</th>
-              <th>Tác vụ</th>
+              <th>Người giao</th>
+              <th>Kho</th>
             </tr>
             </thead>
             <tbody>
-            <!-- Dữ liệu đơn hàng sẽ được đổ vào đây từ Spring Boot -->
-            <tr th:each="order : ${orders}">
-              <td th:text="${order.getId()}"></td>
-              <td th:text="${order.getNameOrder()}"></td>
-              <td th:text="${order.getStatus()}"></td>
-              <td th:text="${order.getPriceOrder()+order.getShip()}"></td>
-              <td th:text="${order.getAreaOrder()}"></td>
-
-              <td>
-                <a class="btn btn-primary" th:href="@{'/web/orders/'+${order.getId()}}" >Xem</a>
-
-                <a  th:if="${order.getStatus().equals('Pending')}"th:href="@{'/web/orders/accept-order/'+${order.getId()}+'?newStatus=Coming'}" class="btn btn-success" onclick="approveOrder(1)">Duyệt đơn</a>
-                <a th:if="${order.getStatus().equals('Pending')}" th:href="@{'/web/orders/refuse-order/'+${order.getId()}+'?newStatus=Skipped'}" class="btn btn-danger" onclick="rejectOrder(1)">Từ chối đơn</a>
-              </td>
+            <!-- Sử dụng thymeleaf để lấy dữ liệu từ model -->
+            <tr>
+              <td th:text="${orders.nameOrder}"></td>
+              <td th:text="${orders.phoneOrder}"></td>
+              <td th:text="${orders.priceOrder}"></td>
+              <td th:text="${orders.ship}"></td>
+              <td th:text="${orders.status}"></td>
+              <td th:text="${orders.areaOrder}"></td>
+              <td th:text="${orders.user.name}"></td>
+              <td th:text="${orders.warehouse.nameWh}"></td>
             </tr>
-            <!-- Các dòng khác tương tự -->
             </tbody>
           </table>
-          <!-- Nút thêm đơn hàng -->
-          <a class="btn btn-primary" th:href="@{'/web/orders/neworder'}">Thêm đơn</a>
+          <!-- Tạo một bảng để hiển thị danh sách sản phẩm của order -->
+          <h2 class="text-center">Danh sách sản phẩm</h2>
+          <table class="table table-bordered table-striped">
+            <thead>
+            <tr>
+              <th>Tên sản phẩm</th>
+              <th>Giá sản phẩm</th>
+              <th>Cửa hàng</th>
+              <th>Hình ảnh</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Sử dụng thymeleaf để lấy dữ liệu từ model -->
+            <tr th:each="product : ${orders.products}">
+              <td th:text="${product.name}"></td>
+              <td th:text="${product.price}"></td>
+              <td th:text="${product.shop}"></td>
+              <td><img th:src="${product.imageUrl}" alt="Hình ảnh sản phẩm" width="100" height="100"></td>
+            </tr>
+            </tbody>
+          </table>
         </div>
+
       </div>
     </div>
   </div>
