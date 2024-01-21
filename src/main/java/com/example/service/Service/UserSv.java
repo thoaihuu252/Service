@@ -23,4 +23,7 @@ public class UserSv {
     public Userdbb createUser(Userdbb user) {
         return userRepository.save(user);
     }
+    public void deleteUser(String user) {
+        userRepository.deleteById(user);
+    }
 }
