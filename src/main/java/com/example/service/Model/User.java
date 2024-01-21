@@ -14,6 +14,9 @@ public class User {
         this.email = email;
         this.urlAvt = urlAvt;
     }
+    public User(){
+
+    }
 
     public String getId() {
         return id;
@@ -53,5 +56,16 @@ public class User {
 
     public void setUrlAvt(String urlAvt) {
         this.urlAvt = urlAvt;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", urlAvt='" + urlAvt + '\'' +
+                '}';
     }
 }
