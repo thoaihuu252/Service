@@ -1,5 +1,6 @@
 package com.example.service.Service;
 
+import com.example.service.Model.User;
 import com.example.service.Model.Userdbb;
 
 import com.example.service.controller.UserRepositoryWeb;
@@ -18,6 +19,7 @@ public class UserSv {
     public List<Userdbb> getAllUser() {
         return  (List<Userdbb>) userRepository.findAll();
     }
+
     public Userdbb createUser(Userdbb user) {
         return userRepository.save(user);
     }

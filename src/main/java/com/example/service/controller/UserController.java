@@ -1,6 +1,9 @@
 package com.example.service.controller;
 
 import com.example.service.Model.User;
+import com.example.service.Model.Userdbb;
+import com.example.service.Service.UserSv;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,12 +15,14 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
+    @Autowired
+    private UserSv userSv;
+    private List<User> userList ;
 
-    private List<User> userList = new ArrayList<>();
     public UserController() {
         this.userList = new ArrayList<>();
-        userList.add(new User("1", "John", "password1", "john@example.com", "http://example.com/john"));
-        userList.add(new User("2", "Jane", "password2", "jane@example.com", "http://example.com/jane"));
+        userList.add(new User("1", "John", "password1", "john@example.com", "http://example.com/john",0));
+        userList.add(new User("2", "thoai", "123", "jane@example.com", "http://example.com/jane",0));
     }
 
     @GetMapping

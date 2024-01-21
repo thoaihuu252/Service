@@ -8,10 +8,10 @@ public class Warehouse {
     private String nameWh; //Warehouse - wh
     private String areaWh;
     private int numberOrderWh;
-    private ArrayList<Product> productList;
+    private ArrayList<Orderr> productList;
 
 
-    public Warehouse(String id, String nameWh, String areaWh, int numberOrderWh, ArrayList<Product> productList) {
+    public Warehouse(String id, String nameWh, String areaWh, int numberOrderWh, ArrayList<Orderr> productList) {
         this.id = id;
         this.nameWh = nameWh;
         this.areaWh = areaWh;
@@ -19,11 +19,11 @@ public class Warehouse {
         this.productList = productList;
     }
 
-    public List<Product> getProductList() {
+    public List<Orderr> getProductList() {
         return productList;
     }
 
-    public void setProductList(ArrayList<Product> productList) {
+    public void setProductList(ArrayList<Orderr> productList) {
         this.productList = productList;
     }
 
