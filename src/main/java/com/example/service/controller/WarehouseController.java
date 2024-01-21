@@ -1,5 +1,6 @@
 package com.example.service.controller;
 
+import com.example.service.Model.Orderr;
 import com.example.service.Model.Product;
 import com.example.service.Model.Warehouse;
 import org.springframework.http.HttpStatus;
@@ -19,12 +20,19 @@ public class WarehouseController {
     public WarehouseController() {
         // Khởi tạo danh sách kho và sản phẩm mẫu
         warehouseList = new ArrayList<>();
-        warehouseList.add(new Warehouse("1", "Warehouse A", "Area A", 0, new ArrayList<>()));
-        warehouseList.add(new Warehouse("2", "Warehouse B", "Area B", 0, new ArrayList<>()));
+
+
         // Thêm một số sản phẩm mẫu cho mỗi kho
-        warehouseList.get(0).getProductList().add(new Product("1", "Product A", 100, "Shop A","url"));
-        warehouseList.get(0).getProductList().add(new Product("1", "Product A", 100, "Shop A","url"));
-        warehouseList.get(1).getProductList().add(new Product("1", "Product A", 100, "Shop A","url"));
+        Orderr order1 = new Orderr("1", "Order A", "123456789", 100, "Pending",  10,"Arrea A");
+        Orderr order2 = new Orderr("2", "Order B", "987654321", 150, "Pending", 20,"Area B");
+        var orders = new ArrayList<Orderr>();
+        orders.add(order1);
+        orders.add(order2);
+
+        // Tạo đối tượng Warehouse với danh sách đơn hàng
+        warehouseList.add(new Warehouse("2", "Warehouse B", "Area B", 0, orders));
+        warehouseList.add(new Warehouse("1", "Warehouse A", "Area A", 0, orders));
+
     }
 
     @GetMapping
@@ -73,21 +81,21 @@ public class WarehouseController {
         }
     }
 
-    @GetMapping("/{id}/products")
-    public ResponseEntity<List<Product>> getProductsForWarehouse(@PathVariable String id) {
-        Optional<Warehouse> warehouse = warehouseList.stream().filter(w -> w.getId().equals(id)).findFirst();
-        return warehouse.map(value -> new ResponseEntity<>(value.getProductList(), HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
+//    @GetMapping("/{id}/products")
+//    public ResponseEntity<List<Product>> getProductsForWarehouse(@PathVariable String id) {
+//        Optional<Warehouse> warehouse = warehouseList.stream().filter(w -> w.getId().equals(id)).findFirst();
+//        return warehouse.map(value -> new ResponseEntity<>(value.getProductList(), HttpStatus.OK))
+//                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+//    }
 
-    @PostMapping("/{id}/products")
-    public ResponseEntity<Product> addProductToWarehouse(@PathVariable String id, @RequestBody Product product) {
-        Optional<Warehouse> warehouse = warehouseList.stream().filter(w -> w.getId().equals(id)).findFirst();
-        if (warehouse.isPresent()) {
-            warehouse.get().getProductList().add(product);
-            return new ResponseEntity<>(product, HttpStatus.CREATED);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
+//    @PostMapping("/{id}/products")
+//    public ResponseEntity<Product> addProductToWarehouse(@PathVariable String id, @RequestBody Product product) {
+//        Optional<Warehouse> warehouse = warehouseList.stream().filter(w -> w.getId().equals(id)).findFirst();
+//        if (warehouse.isPresent()) {
+//            warehouse.get().getProductList().add(product);
+//            return new ResponseEntity<>(product, HttpStatus.CREATED);
+//        } else {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//    }
 }
