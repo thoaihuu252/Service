@@ -19,7 +19,7 @@
       <!-- Sidebar scroll-->
       <div>
         <div class="brand-logo d-flex align-items-center justify-content-between">
-          <a th:href="@{/home.html}" class="text-nowrap logo-img">
+          <a th:href="@{/all}" class="text-nowrap logo-img">
             <img src="assets/images/logos/dark-logo.svg" width="180" alt="" />
           </a>
 
@@ -40,14 +40,6 @@
                   <i class="ti ti-layout-dashboard"></i>
                 </span>
                 <span class="hide-menu">Quản lý Đơn</span>
-              </a>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="./allUser" aria-expanded="false">
-                <span>
-                  <i class="ti ti-layout-dashboard"></i>
-                </span>
-                <span class="hide-menu">Quản lý Tài khoản</span>
               </a>
             </li>
           </ul>
@@ -107,45 +99,80 @@
       </header>
       <!--  Header End -->
       <div class="container-fluid">
-        <div class="container mt-5">
-          <h2>Danh sách đơn hàng</h2>
-          <a class="btn btn-primary" th:href="@{'/web/orders/all'}">ALl</a>
-          <a class="btn btn-primary" th:href="@{'/web/orders/status'}">Pending</a>
-          <a class="btn btn-primary" th:href="@{'/web/orders/statusC'}">Complete</a>
-          <!-- Danh sách đơn hàng -->
-          <table class="table">
-            <thead>
-            <tr>
-              <th>ID</th>
-              <th>Tên</th>
-              <th>Trạng thái</th>
-              <th>Tổng Đơn Giá</th>
-              <th>Khu vực</th>
-              <th>Tác vụ</th>
-            </tr>
-            </thead>
-            <tbody>
-            <!-- Dữ liệu đơn hàng sẽ được đổ vào đây từ Spring Boot -->
-            <tr th:each="order : ${orders}">
-              <td th:text="${order.getId()}"></td>
-              <td th:text="${order.getNameOrder()}"></td>
-              <td th:text="${order.getStatus()}"></td>
-              <td th:text="${order.getPriceOrder()+order.getShip()}"></td>
-              <td th:text="${order.getAreaOrder()}"></td>
+        <form action="/web/orders/addOrder"  th:object="${orderr}" th:method="post" enctype="multipart/form-data">
+          <!-- Các trường dữ liệu khác của đơn hàng -->
 
-              <td>
-                <a class="btn btn-primary" th:href="@{'/web/orders/'+${order.getId()}}" >Xem</a>
+          <div class="modal-body">
+            <label th:for="orderName">ID</label>
+            <input type="text" class="form-control" th:field="*{id}" id="idO" required>
+            <label th:for="orderName">Tên đơn</label>
+            <input type="text" class="form-control" th:field="*{nameOrder}" id="orderName" required>
 
-                <a  th:if="${order.getStatus().equals('Pending')}"th:href="@{'/web/orders/accept-order/'+${order.getId()}+'?newStatus=Coming'}" class="btn btn-success" onclick="approveOrder(1)">Duyệt đơn</a>
-                <a th:if="${order.getStatus().equals('Pending')}" th:href="@{'/web/orders/refuse-order/'+${order.getId()}+'?newStatus=Skipped'}" class="btn btn-danger" onclick="rejectOrder(1)">Từ chối đơn</a>
-              </td>
-            </tr>
-            <!-- Các dòng khác tương tự -->
-            </tbody>
-          </table>
-          <!-- Nút thêm đơn hàng -->
-          <a class="btn btn-primary" th:href="@{'/web/orders/neworder'}">Thêm đơn</a>
-        </div>
+            <label th:for="phone">Phone</label>
+            <input type="tel" class="form-control" th:field="*{phoneOrder}" th:id="phone" required>
+            <label th:for="orderName">Giá</label>
+            <input type="number" class="form-control" th:field="*{priceOrder}" id="price" required>
+            <label th:for="orderName">status</label>
+            <input type="text" class="form-control" th:field="*{status}" id="status" required>
+
+            <label th:for="price">Ship</label>
+            <input type="number" class="form-control" th:field="*{ship}" th:id="ship" required>
+            <label th:for="orderName">User</label>
+            <input type="text" class="form-control" th:field="*{user}" id="user" required>
+            <label th:for="orderName">WareHouse</label>
+            <input type="text" class="form-control" th:field="*{warehouse}" id="WareHouse" required>
+
+            <!-- Các trường khác của đơn hàng -->
+          </div>
+
+          <div class="modal-body" id="productList">
+            <h2 for="productList">Sản phẩm</h2>
+            <div th:each="product, stat : *{products}">
+              <label th:for="${'productName' + stat.index}">Tên sản phẩm</label>
+              <input type="text" class="form-control" th:field="*{products[__${stat.index}__].name}" th:id="${'productName' + stat.index}" required>
+
+              <label th:for="${'productPrice' + stat.index}">Giá sản phẩm</label>
+              <input type="number" class="form-control" th:field="*{products[__${stat.index}__].price}" th:id="${'productPrice' + stat.index}" required>
+
+              <label th:for="${'productImage' + stat.index}">Hình ảnh sản phẩm</label>
+              <input type="file" class="form-control-file" th:field="*{products[__${stat.index}__].imageUrl}" th:id="${'productImage' + stat.index}" accept="image/*" required>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="addProduct()">Thêm sản phẩm</button>
+          </div>
+
+          <button type="submit" class="btn btn-success">Lưu đơn hàng</button>
+        </form>
+        <script th:inline="javascript">
+          /*<![CDATA[*/
+
+          var productCount = 1;
+
+          function addProduct() {
+            productCount++;
+
+            var productList = document.getElementById("productList");
+            var newProduct = document.createElement("div");
+            newProduct.id = "product" + productCount;
+
+            newProduct.innerHTML = `
+            <h5>Sản phẩm ${productCount}</h5>
+            <label for="productName${productCount}">Tên sản phẩm</label>
+            <input type="text" class="form-control" th:field="*{products[__${productCount - 1}__].name}" required>
+
+            <label for="productPrice${productCount}">Giá sản phẩm</label>
+            <input type="number" class="form-control" th:field="*{products[__${productCount - 1}__].price}" required>
+
+            <label for="productImage${productCount}">Hình ảnh sản phẩm</label>
+            <input type="file" class="form-control-file" th:field="*{products[__${productCount - 1}__].imageUrl}" accept="image/*" required>
+        `;
+
+            productList.appendChild(newProduct);
+          }
+
+          /*]]>*/
+        </script>
+
+
       </div>
     </div>
   </div>

@@ -4,6 +4,7 @@ import com.example.service.Model.Order;
 import com.example.service.Model.Orderr;
 import com.example.service.Model.Product;
 import com.example.service.controller.OrderRepository;
+import com.example.service.controller.UserRepositoryWeb;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -23,6 +24,8 @@ public class OrderSv {
     OrderRepository orderRepository;
     @Autowired
     private ProductSv productService;
+    @Autowired
+    private UserRepositoryWeb userRepository;
 
 
     public List<Orderr> getAllOrder() {
@@ -34,6 +37,9 @@ public class OrderSv {
     }
     public Optional<Orderr> getAllOrderbyID(String id) {
         return orderRepository.findById(id);
+    }
+    public Orderr getAllOrderbyID2(String id) {
+        return orderRepository.findById(id).orElse(null);
     }
     public Orderr createOrder(Orderr orderr) {
         // Validate if the products associated with the order exist
@@ -61,6 +67,20 @@ public class OrderSv {
 
         return orderRepository.save(existingOrder);
     }
+    public Orderr Accept(String id, String newStatus,String userid) {
+        Orderr existingOrder = orderRepository.findById(id).orElse(null);
+
+        if (existingOrder == null) {
+            throw new IllegalArgumentException("Don khong ton tai.");
+        }
+
+        existingOrder.setStatus(newStatus);
+        existingOrder.setUser(userRepository.findById(userid).orElse(null));
+
+        // Thêm logic kiểm tra và xử lý nếu cần
+
+        return orderRepository.save(existingOrder);
+    }
     public void deleteOrder(String id) {
         Orderr existingOrder = orderRepository.findById(id).orElse(null);
 
@@ -71,6 +91,9 @@ public class OrderSv {
         // Thêm logic kiểm tra và xử lý nếu cần
 
         orderRepository.delete(existingOrder);
+    }
+    public List<Order> findByStatus(String status) {
+        return orderRepository.findAllByStatus(status);
     }
     public Set<Product> getAllProductsFromOrder(String orderId) {
         Orderr existingOrder = orderRepository.findById(orderId).orElse(null);
@@ -97,6 +120,11 @@ public class OrderSv {
 
 
         return orderRepository.save(existingOrder);
+    }
+
+
+    public void save(Orderr orderr) {
+        orderRepository.save(orderr);
     }
 
 }
